@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Magnetic from "../ui/Magnetic";
 import Link from "next/link";
@@ -11,7 +11,7 @@ const flavors = [
     title: "MANGO",
     subtitle: "Tropical. Juicy. Bold.",
     description: "Cold-pressed from the sweetest Alphonso mangoes. It's sunshine in a bottle, perfectly balanced and wildly refreshing.",
-    price: "$12.00",
+    price: "₹159",
     bgColor: "bg-[#FFF4E0]",
     emoji: "🥭",
     accentColor: "text-mango-500",
@@ -22,61 +22,37 @@ const flavors = [
     id: "grape",
     title: "GRAPE",
     subtitle: "Rich. Deep. Classic.",
-    description: "Concord grapes pressed with their skins for maximum antioxidant power. A dark, sophisticated take on a childhood favorite.",
-    price: "$11.50",
+    description: "Concord grapes pressed for a dark, bold flavor.",
+    price: "₹159",
     bgColor: "bg-[#F3E5F5]",
     emoji: "🍇",
     accentColor: "text-purple-600",
     buttonColor: "bg-purple-600",
-    slug: "grape-galaxy"
+    slug: "grape-gravity"
   },
   {
-    id: "orange",
-    title: "ORANGE",
-    subtitle: "Citrus. Zesty. Bright.",
-    description: "Valencia oranges squeezed at dawn. Packed with Vitamin C and an electric zest that completely wakes you up.",
-    price: "$10.00",
-    bgColor: "bg-[#FFF0E0]",
-    emoji: "🍊",
-    accentColor: "text-orange-500",
-    buttonColor: "bg-orange-500",
-    slug: "orange-overload"
+    id: "watermelon",
+    title: "WATERMELON",
+    subtitle: "Cool. Bright. Easy.",
+    description: "Cold-pressed watermelon with a hint of mint.",
+    price: "₹159",
+    bgColor: "bg-[#E8FFF8]",
+    emoji: "🍉",
+    accentColor: "text-teal-500",
+    buttonColor: "bg-teal-500",
+    slug: "watermelon-wave"
   },
   {
-    id: "apple",
-    title: "APPLE",
-    subtitle: "Crisp. Clean. Fresh.",
-    description: "Fuji and Granny Smith apples cold-pressed to maintain that perfect balance of sweet and tart snap.",
-    price: "$9.50",
-    bgColor: "bg-[#E8F5E9]",
-    emoji: "🍏",
-    accentColor: "text-green-500",
-    buttonColor: "bg-green-500",
-    slug: "apple-awakening"
-  },
-  {
-    id: "pineapple",
-    title: "PINEAPPLE",
-    subtitle: "Exotic. Sharp. Sweet.",
-    description: "Pure Costa Rican gold. A vibrant, enzyme-rich burst of tropical energy that hits instantly.",
-    price: "$12.50",
-    bgColor: "bg-[#FFF9C4]",
-    emoji: "🍍",
-    accentColor: "text-yellow-600",
-    buttonColor: "bg-yellow-500",
-    slug: "pineapple-punch"
-  },
-  {
-    id: "mixed",
-    title: "MIXED FRUIT",
-    subtitle: "Wild. Complex. Perfect.",
-    description: "Our signature canopy blend. A chaotic, beautiful mix of seven different fruits that shouldn't work together, but absolutely do.",
-    price: "$14.00",
-    bgColor: "bg-[#FFEBEE]",
+    id: "strawberry",
+    title: "STRAWBERRY",
+    subtitle: "Tart. Sweet. Fresh.",
+    description: "Wild strawberries smashed without added sugars.",
+    price: "₹159",
+    bgColor: "bg-[#FFE8EC]",
     emoji: "🍓",
-    accentColor: "text-raspberry-500",
-    buttonColor: "bg-raspberry-500",
-    slug: "mixed-berry"
+    accentColor: "text-rose-500",
+    buttonColor: "bg-rose-500",
+    slug: "strawberry-smash"
   }
 ];
 
@@ -100,7 +76,7 @@ export default function SplitShowcase() {
       if (newIndex >= showcaseFlavors.length) newIndex = showcaseFlavors.length - 1;
       setActiveIndex(newIndex);
     });
-  }, [scrollYProgress]);
+  }, [scrollYProgress, showcaseFlavors.length]);
 
   const activeFlavor = showcaseFlavors[activeIndex] || showcaseFlavors[0];
 

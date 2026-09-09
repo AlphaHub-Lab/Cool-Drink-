@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Package, Settings, LogOut, ChevronRight, MessageSquareHeart } from "lucide-react";
+import { Package, Settings, LogOut, ChevronRight, MessageSquareHeart } from "lucide-react";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("orders");

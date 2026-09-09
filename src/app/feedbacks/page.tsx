@@ -65,7 +65,7 @@ export default function FeedbacksPage() {
                 </motion.div>
               </div>
               <p className="text-foreground/80 font-medium leading-relaxed">
-                "{review.text}"
+                &quot;{review.text}&quot;
               </p>
             </motion.div>
           ))}

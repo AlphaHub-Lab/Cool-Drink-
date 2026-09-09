@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 
 export default function BrandStory() {
   const container = useRef(null);
@@ -37,7 +38,7 @@ export default function BrandStory() {
               transition={{ delay: 0.2 }}
               className="text-xl md:text-2xl text-background/80 mb-8 max-w-lg leading-relaxed"
             >
-              We didn't start No Filter in a corporate boardroom. We started it because we were tired of drinking flavored water masquerading as juice.
+              We didn&apos;t start No Filter in a corporate boardroom. We started it because we were tired of drinking flavored water masquerading as juice.
             </motion.p>
             <motion.p 
               initial={{ opacity: 0 }}
@@ -53,10 +54,10 @@ export default function BrandStory() {
           {/* Composition */}
           <div className="order-1 md:order-2 relative h-[600px] flex items-center justify-center">
             <motion.div style={{ y: y1 }} className="absolute z-10 w-64 h-80 bg-mango-500 rounded-[2rem] overflow-hidden rotate-6 shadow-2xl left-[10%]">
-              <img src="https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=800" alt="Canopy" className="w-full h-full object-cover opacity-80 mix-blend-multiply" />
+              <Image src="https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=800" alt="Canopy" fill unoptimized className="object-cover opacity-80 mix-blend-multiply" />
             </motion.div>
             <motion.div style={{ y: y2 }} className="absolute z-20 w-72 h-96 bg-white rounded-[2rem] overflow-hidden -rotate-3 shadow-2xl right-[10%]">
-              <img src="https://images.unsplash.com/photo-1596700020165-2244a0441a9f?w=800" alt="Fruit" className="w-full h-full object-cover" />
+              <Image src="https://images.unsplash.com/photo-1596700020165-2244a0441a9f?w=800" alt="Fruit" fill unoptimized className="object-cover" />
             </motion.div>
           </div>
 

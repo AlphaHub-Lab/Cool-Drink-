@@ -1,31 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import Lenis from "lenis";
+import { initSharedScroll } from "@/animations/registry";
 
+/** Legacy wrapper. Layout already mounts AnimationEngine — do not add a second Lenis. */
 export default function SmoothScrolling() {
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
+    return initSharedScroll();
   }, []);
-
   return null;
 }

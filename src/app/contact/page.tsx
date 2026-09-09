@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2 }}
             className="text-xl text-foreground/70 max-w-2xl mx-auto font-medium"
           >
-            Whether you want to talk about juice, sloths, or just need someone to listen. We're here.
+            Whether you want to talk about juice, sloths, or just need someone to listen. We&apos;re here.
           </motion.p>
         </div>
 

@@ -1,6 +1,7 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 
 export default function ImageReveal({
   src,
@@ -41,10 +42,12 @@ export default function ImageReveal({
         style={{ y }}
         className="absolute inset-0 w-full h-[120%] -top-[10%]"
       >
-        <img
+        <Image
           src={src}
           alt={alt}
-          className="w-full h-full object-cover"
+          fill
+          unoptimized
+          className="object-cover"
         />
       </motion.div>
       

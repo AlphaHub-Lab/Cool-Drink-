@@ -26,7 +26,7 @@ export default function StorySection() {
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-8 leading-tight text-foreground">
               We monkeyed around,<br/>
-              <span className="text-forest-500">so you don't have to.</span>
+              <span className="text-forest-500">so you don&apos;t have to.</span>
             </h2>
             
             <div className="space-y-6 text-lg text-foreground/80 font-medium max-w-lg">

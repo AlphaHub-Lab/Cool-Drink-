@@ -52,7 +52,7 @@ export default function LoginPage() {
           className="max-w-md w-full mx-auto"
         >
           <h1 className="text-4xl font-display font-bold mb-2">Sign In</h1>
-          <p className="text-foreground/60 mb-8">Don't have an account? <Link href="/register" className="text-forest-500 font-bold hover:underline">Sign up</Link></p>
+          <p className="text-foreground/60 mb-8">Don&apos;t have an account? <Link href="/register" className="text-forest-500 font-bold hover:underline">Sign up</Link></p>
 
           <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
             

@@ -15,14 +15,19 @@
   --purple-brand: #6B2FA0;
   --green-brand: #1DB954;
   --orange-brand: #FF6B2B;
+
+  /* Offline-safe fallbacks keep local and production builds independent of Google Fonts. */
+  --nf-font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --nf-font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --nf-font-condensed: Impact, "Arial Narrow Bold", "Arial Black", sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
-  --font-condensed: var(--font-condensed), 'Impact', 'Arial Black', sans-serif;
+  --font-sans: var(--nf-font-sans);
+  --font-display: var(--nf-font-display);
+  --font-condensed: var(--nf-font-condensed);
 
   --color-mango-500: var(--mango-500);
   --color-mango-400: var(--mango-400);
@@ -49,6 +54,64 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+@keyframes nf-loader-exit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes nf-loader-word-in {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes nf-loader-line-in {
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes nf-loader-copy-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fast snappy loader intro with smooth exit */
+.nf-loader {
+  animation: nf-loader-exit 0.6s cubic-bezier(0.76, 0, 0.24, 1) 0.8s forwards;
+}
+
+.nf-loader-word {
+  transform: translateY(110%);
+  animation: nf-loader-word-in 0.8s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+.nf-loader-word-no {
+  animation-delay: 0.3s;
+}
+
+.nf-loader-word-filter {
+  animation-delay: 0.5s;
+}
+
+.nf-loader-line {
+  opacity: 0;
+  width: 100%;
+  transform: scaleX(0);
+  animation: nf-loader-line-in 0.8s ease 1.2s forwards;
+}
+
+.nf-loader-copy {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: nf-loader-copy-in 0.6s ease 1.5s forwards;
 }
 
 /* Override scrollbar for premium feel */

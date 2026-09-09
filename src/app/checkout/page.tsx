@@ -2,9 +2,14 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import Magnetic from "@/components/ui/Magnetic";
+import { useCart } from "@/context/CartContext";
 
 export default function CheckoutPage() {
+  const { items, subtotal } = useCart();
+  const shipping = items.length ? 40 : 0;
+  const total = subtotal + shipping;
   return (
     <div className="pt-32 pb-32 bg-background min-h-screen text-foreground">
       <div className="container mx-auto px-6 max-w-6xl">
@@ -101,45 +106,37 @@ export default function CheckoutPage() {
               <h3 className="text-2xl font-display font-bold mb-8">Order Summary</h3>
               
               <div className="space-y-6 mb-8">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-mango-500 rounded-xl flex items-center justify-center text-2xl filter drop-shadow-md">
-                      🥭
+                {items.length === 0 && (
+                  <p className="text-background/60 text-sm">Your cart is empty. <Link href="/shop" className="underline">Shop juices</Link>.</p>
+                )}
+                {items.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                      <div className={`relative w-16 h-16 ${item.color} rounded-xl overflow-hidden`}>
+                        <Image src={item.bottleSrc} alt={item.name} fill className="object-contain p-1" />
+                      </div>
+                      <div>
+                        <p className="font-bold">{item.name}</p>
+                        <p className="text-sm text-background/60">Qty: {item.qty}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-bold">Mango Madness</p>
-                      <p className="text-sm text-background/60">Qty: 2</p>
-                    </div>
+                    <p className="font-bold">₹{item.price * item.qty}</p>
                   </div>
-                  <p className="font-bold">$12.00</p>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-raspberry-500 rounded-xl flex items-center justify-center text-2xl filter drop-shadow-md">
-                      🍓
-                    </div>
-                    <div>
-                      <p className="font-bold">Raspberry Rush</p>
-                      <p className="text-sm text-background/60">Qty: 1</p>
-                    </div>
-                  </div>
-                  <p className="font-bold">$6.50</p>
-                </div>
+                ))}
               </div>
 
               <div className="border-t border-background/20 pt-6 space-y-4 mb-8">
                 <div className="flex justify-between text-background/80">
                   <span>Subtotal</span>
-                  <span>$18.50</span>
+                  <span>₹{subtotal}</span>
                 </div>
                 <div className="flex justify-between text-background/80">
                   <span>Shipping</span>
-                  <span>$5.00</span>
+                  <span>₹{shipping}</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold pt-4 border-t border-background/20">
                   <span>Total</span>
-                  <span className="text-mango-500">$23.50</span>
+                  <span className="text-mango-500">₹{total}</span>
                 </div>
               </div>
 

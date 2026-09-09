@@ -41,12 +41,12 @@ export default function Splash3D({ onComplete }: { onComplete: () => void }) {
       if (rippleRef.current) {
          // Scale up massively to engulf the camera (camera is at z=8, splash is at z=5, diff = 3)
          // A radius of 10 will definitely cover the camera
-         rippleRef.current.scale.lerp(new THREE.Vector3(15, 15, 15), delta * 8);
+         rippleRef.current.scale.lerp(new THREE.Vector3(2.4, 2.4, 2.4), delta * 6);
       }
     }
     if (state === 2 && rippleRef.current) {
       // Fade out opacity while continuing to grow slightly
-      rippleRef.current.scale.lerp(new THREE.Vector3(20, 20, 20), delta * 2);
+      rippleRef.current.scale.lerp(new THREE.Vector3(3.2, 3.2, 3.2), delta * 2);
       const mat = rippleRef.current.material as THREE.MeshPhysicalMaterial;
       if (mat.opacity > 0) {
         mat.opacity -= delta * 1.5;

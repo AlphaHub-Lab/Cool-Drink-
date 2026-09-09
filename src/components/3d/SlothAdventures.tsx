@@ -1,159 +1,39 @@
 "use client";
 
-import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Environment } from "@react-three/drei";
+import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import JuiceBottle3D from "./JuiceBottle3D";
 
+import { Text } from "@react-three/drei";
+
 /* ────────────────────────────────────────────
-   SLOTH 3D — Procedural stylized sloth character
-   Built from spheres, capsules, cylinders
+   SLOTH PLACEHOLDER
+   TEMPORARY ASSET: Awaiting production GLB/GLTF sloth model
 ──────────────────────────────────────────── */
 
-const SLOTH_FUR = "#8B7355";
-const SLOTH_FACE = "#D4C5A9";
-const SLOTH_DARK = "#3D2B1F";
-const SLOTH_NOSE = "#2D1B0E";
-
-function SlothHead({ position = [0, 0, 0] as [number, number, number] }) {
+export function SlothPlaceholder({ position = [0, 0, 0] as [number, number, number], scale = 1, rotation = [0, 0, 0] as [number, number, number] }) {
   return (
-    <group position={position}>
-      {/* Main head */}
+    <group position={position} scale={scale} rotation={rotation}>
       <mesh castShadow>
-        <sphereGeometry args={[0.35, 32, 32]} />
-        <meshStandardMaterial color={SLOTH_FUR} roughness={0.9} />
+        <boxGeometry args={[0.8, 1.2, 0.8]} />
+        <meshStandardMaterial color="#ff0044" wireframe opacity={0.8} transparent />
       </mesh>
-      {/* Face patch */}
-      <mesh position={[0, -0.02, 0.25]}>
-        <sphereGeometry args={[0.25, 32, 32]} />
-        <meshStandardMaterial color={SLOTH_FACE} roughness={0.95} />
-      </mesh>
-      {/* Eye masks — dark patches */}
-      <mesh position={[-0.1, 0.05, 0.3]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-        <meshStandardMaterial color={SLOTH_DARK} roughness={0.95} />
-      </mesh>
-      <mesh position={[0.1, 0.05, 0.3]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-        <meshStandardMaterial color={SLOTH_DARK} roughness={0.95} />
-      </mesh>
-      {/* Eyes */}
-      <mesh position={[-0.1, 0.05, 0.35]}>
-        <sphereGeometry args={[0.035, 16, 16]} />
-        <meshStandardMaterial color="#111111" roughness={0.2} metalness={0.3} />
-      </mesh>
-      <mesh position={[0.1, 0.05, 0.35]}>
-        <sphereGeometry args={[0.035, 16, 16]} />
-        <meshStandardMaterial color="#111111" roughness={0.2} metalness={0.3} />
-      </mesh>
-      {/* Eye highlights */}
-      <mesh position={[-0.09, 0.06, 0.38]}>
-        <sphereGeometry args={[0.012, 8, 8]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.5} />
-      </mesh>
-      <mesh position={[0.11, 0.06, 0.38]}>
-        <sphereGeometry args={[0.012, 8, 8]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.5} />
-      </mesh>
-      {/* Nose */}
-      <mesh position={[0, -0.06, 0.38]}>
-        <sphereGeometry args={[0.04, 16, 16]} />
-        <meshStandardMaterial color={SLOTH_NOSE} roughness={0.5} />
-      </mesh>
-      {/* Smile */}
-      <mesh position={[0, -0.12, 0.34]} rotation={[0.3, 0, 0]}>
-        <torusGeometry args={[0.05, 0.008, 8, 16, Math.PI]} />
-        <meshStandardMaterial color={SLOTH_DARK} />
-      </mesh>
-      {/* Ears */}
-      <mesh position={[-0.3, 0.15, 0]} rotation={[0, 0, -0.3]}>
-        <sphereGeometry args={[0.1, 16, 16]} />
-        <meshStandardMaterial color={SLOTH_FUR} roughness={0.95} />
-      </mesh>
-      <mesh position={[0.3, 0.15, 0]} rotation={[0, 0, 0.3]}>
-        <sphereGeometry args={[0.1, 16, 16]} />
-        <meshStandardMaterial color={SLOTH_FUR} roughness={0.95} />
-      </mesh>
+      <Text
+        position={[0, 0.8, 0]}
+        fontSize={0.15}
+        color="#ff0044"
+        anchorX="center"
+        anchorY="middle"
+        outlineWidth={0.02}
+        outlineColor="#ffffff"
+      >
+        MISSING 3D ASSET
+      </Text>
     </group>
   );
 }
 
-function SlothBody() {
-  return (
-    <group>
-      {/* Torso */}
-      <mesh position={[0, -0.6, 0]} castShadow>
-        <capsuleGeometry args={[0.3, 0.5, 16, 32]} />
-        <meshStandardMaterial color={SLOTH_FUR} roughness={0.9} />
-      </mesh>
-      {/* Belly patch */}
-      <mesh position={[0, -0.55, 0.2]}>
-        <sphereGeometry args={[0.22, 32, 32]} />
-        <meshStandardMaterial color={SLOTH_FACE} roughness={0.95} />
-      </mesh>
-    </group>
-  );
-}
-
-function SlothArm({ side, rotation = [0, 0, 0] as [number, number, number], holding = false }: { side: "left" | "right"; rotation?: [number, number, number]; holding?: boolean }) {
-  const x = side === "left" ? -0.35 : 0.35;
-  const clawRot = side === "left" ? 0.3 : -0.3;
-
-  return (
-    <group position={[x, -0.4, 0]} rotation={rotation}>
-      {/* Upper arm */}
-      <mesh castShadow>
-        <capsuleGeometry args={[0.08, 0.4, 8, 16]} />
-        <meshStandardMaterial color={SLOTH_FUR} roughness={0.9} />
-      </mesh>
-      {/* Forearm */}
-      <mesh position={[0, -0.35, 0.1]} rotation={[0.5, 0, 0]} castShadow>
-        <capsuleGeometry args={[0.07, 0.35, 8, 16]} />
-        <meshStandardMaterial color={SLOTH_FUR} roughness={0.9} />
-      </mesh>
-      {/* Claws */}
-      {[0, 1, 2].map((i) => (
-        <mesh key={i} position={[(i - 1) * 0.04, -0.65, 0.25]} rotation={[0.8, clawRot, 0]}>
-          <coneGeometry args={[0.015, 0.08, 8]} />
-          <meshStandardMaterial color={SLOTH_DARK} roughness={0.4} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-function SlothLeg({ side }: { side: "left" | "right" }) {
-  const x = side === "left" ? -0.18 : 0.18;
-  return (
-    <group position={[x, -1.05, 0]}>
-      <mesh castShadow>
-        <capsuleGeometry args={[0.09, 0.3, 8, 16]} />
-        <meshStandardMaterial color={SLOTH_FUR} roughness={0.9} />
-      </mesh>
-      {/* Foot */}
-      <mesh position={[0, -0.25, 0.05]}>
-        <sphereGeometry args={[0.1, 16, 16]} />
-        <meshStandardMaterial color={SLOTH_DARK} roughness={0.8} />
-      </mesh>
-    </group>
-  );
-}
-
-/* ───── FULL SLOTH ───── */
-export function Sloth3D({ position = [0, 0, 0] as [number, number, number], scale = 1, rotation = [0, 0, 0] as [number, number, number] }) {
-  const ref = useRef<THREE.Group>(null);
-  return (
-    <group ref={ref} position={position} scale={scale} rotation={rotation}>
-      <SlothHead position={[0, 0.1, 0]} />
-      <SlothBody />
-      <SlothArm side="left" rotation={[0.3, 0, 0.4]} />
-      <SlothArm side="right" rotation={[-0.2, 0, -0.5]} />
-      <SlothLeg side="left" />
-      <SlothLeg side="right" />
-    </group>
-  );
-}
 
 /* ────────────────────────────────────────────
    SCENE: SLOTH SURFING
@@ -209,7 +89,7 @@ export function SlothSurfing() {
   return (
     <group>
       <group ref={groupRef}>
-        <Sloth3D position={[0, 0.6, 0]} rotation={[0, 0.2, 0]} />
+        <SlothPlaceholder position={[0, 0.6, 0]} rotation={[0, 0.2, 0]} />
         <Surfboard />
         {/* Sloth holding a juice bottle */}
         <group position={[0.4, 0.9, 0.2]} rotation={[0, 0.5, 0.3]} scale={0.35}>
@@ -304,7 +184,7 @@ export function SlothParachuting() {
   return (
     <group>
       <group ref={groupRef}>
-        <Sloth3D position={[0, -0.3, 0]} rotation={[0.1, 0, 0]} />
+        <SlothPlaceholder position={[0, -0.3, 0]} rotation={[0.1, 0, 0]} />
         <Parachute color="#E71D36" />
         {/* Sloth gripping juice bottles in each paw */}
         <group position={[-0.5, 0.1, 0.3]} rotation={[0.3, 0.5, 0.4]} scale={0.3}>
@@ -327,14 +207,6 @@ export function SlothParachuting() {
    SCENE: SLOTH CHILLING IN HAMMOCK
 ──────────────────────────────────────────── */
 function Hammock() {
-  const points = useMemo(() => {
-    const pts: THREE.Vector3[] = [];
-    for (let i = 0; i <= 20; i++) {
-      const t = (i / 20) * Math.PI;
-      pts.push(new THREE.Vector3((i / 20) * 3 - 1.5, -Math.sin(t) * 0.5, 0));
-    }
-    return pts;
-  }, []);
 
   return (
     <group>
@@ -389,7 +261,7 @@ export function SlothChilling() {
 
   return (
     <group ref={groupRef}>
-      <Sloth3D position={[0, 0, 0]} rotation={[-0.5, 0, 0]} scale={0.8} />
+      <SlothPlaceholder position={[0, 0, 0]} rotation={[-0.5, 0, 0]} scale={0.8} />
       <Hammock />
       {/* Juice bottle beside the sloth */}
       <group position={[0.6, -0.3, 0.3]} rotation={[0.5, 0.3, 0.2]} scale={0.35}>
@@ -438,7 +310,7 @@ export function SlothJetpack() {
 
   return (
     <group ref={groupRef} rotation={[0.2, 0, 0]}>
-      <Sloth3D position={[0, 0, 0]} rotation={[0.3, 0, 0]} />
+      <SlothPlaceholder position={[0, 0, 0]} rotation={[0.3, 0, 0]} />
       <Jetpack />
       {/* Sloth holding grape juice */}
       <group position={[0, -0.2, 0.4]} rotation={[-0.2, 0, 0]} scale={0.3}>

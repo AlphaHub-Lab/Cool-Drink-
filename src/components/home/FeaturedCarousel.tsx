@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { products } from "@/lib/data";
 import Magnetic from "../ui/Magnetic";
@@ -109,7 +110,7 @@ export default function FeaturedCarousel() {
                   </div>
                 </div>
 
-                <div className="relative z-10 flex justify-center items-center flex-grow text-[10rem] pointer-events-none">
+                <div className="relative z-10 flex justify-center items-center flex-grow py-4 pointer-events-none">
                   <motion.div
                     animate={{ 
                       y: hoveredIndex === index ? -20 : [-10, 10, -10],
@@ -121,9 +122,9 @@ export default function FeaturedCarousel() {
                       rotate: { type: "spring", stiffness: 300, damping: 15 },
                       scale: { type: "spring", stiffness: 300, damping: 15 }
                     }}
-                    className="filter drop-shadow-2xl"
+                    className="relative w-48 h-72 filter drop-shadow-2xl"
                   >
-                    {product.emoji}
+                    <Image src={product.bottleSrc} alt={product.name} fill className="object-contain" priority={index < 2} />
                   </motion.div>
                 </div>
 

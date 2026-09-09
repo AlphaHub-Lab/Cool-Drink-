@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function FeedPage() {
   const posts = [
@@ -49,7 +50,7 @@ export default function FeedPage() {
             >
               {post.type === "image" ? (
                 <div className={`relative ${post.height} w-full`}>
-                  <img src={post.src} alt="Feed post" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                  <Image src={post.src!} alt="Feed post" fill unoptimized className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-8">
                     <p className="text-white font-bold text-lg text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                       {post.text}
@@ -58,7 +59,7 @@ export default function FeedPage() {
                 </div>
               ) : (
                 <div className={`${post.bg} ${post.height} w-full p-12 flex flex-col items-center justify-center text-center`}>
-                  <div className="text-6xl mb-4 text-white/50">"</div>
+                  <div className="text-6xl mb-4 text-white/50">&quot;</div>
                   <h3 className="text-3xl font-display font-bold text-white leading-tight">
                     {post.text}
                   </h3>

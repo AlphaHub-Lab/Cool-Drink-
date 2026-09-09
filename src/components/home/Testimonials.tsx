@@ -87,7 +87,7 @@ export default function Testimonials() {
                   {Array.from({ length: review.rating }).map((_, i) => <span key={i}>★</span>)}
                 </div>
                 <p className="text-2xl md:text-4xl font-display font-medium leading-tight mb-8 text-foreground">
-                  "{review.text}"
+                  &quot;{review.text}&quot;
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-foreground/10 rounded-full flex items-center justify-center text-xl">

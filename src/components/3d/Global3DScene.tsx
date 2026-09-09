@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Float, Environment, PerspectiveCamera } from "@react-three/drei";
+import { SCENE_CAMERA } from "@/lib/brand/canonical";
 import * as THREE from "three";
 import JuiceBottle3D from "./JuiceBottle3D";
 import { SlothSurfing, SlothParachuting, SlothChilling, SlothJetpack } from "./SlothAdventures";
@@ -37,21 +38,12 @@ export default function Global3DScene({
   const chillingRef = useRef<THREE.Group>(null);
   const jetpackRef = useRef<THREE.Group>(null);
 
-  useFrame((state, delta) => {
-    const lerpScale = (ref: React.RefObject<THREE.Group | null>, target: number) => {
-      if (ref.current) {
-        ref.current.scale.lerp(new THREE.Vector3(target, target, target), delta * 8);
-      }
-    };
-
-    // Hero visible only in hero section
-    lerpScale(heroGroupRef, currentSection === "hero" ? 1 : 0.001);
-    
-    // Smoothly scale in/out the sloths when their section is active
-    lerpScale(parachutingRef, currentSection === "mango" ? 0.3 : 0.001);
-    lerpScale(surfingRef, currentSection === "strawberry" ? 0.3 : 0.001);
-    lerpScale(chillingRef, currentSection === "watermelon" ? 0.3 : 0.001);
-    lerpScale(jetpackRef, currentSection === "grape" ? 0.3 : 0.001);
+  useFrame((_state, delta) => {
+    if (heroGroupRef.current) heroGroupRef.current.visible = currentSection === "hero";
+    if (parachutingRef.current) parachutingRef.current.visible = currentSection === "mango";
+    if (surfingRef.current) surfingRef.current.visible = currentSection === "strawberry";
+    if (chillingRef.current) chillingRef.current.visible = currentSection === "watermelon";
+    if (jetpackRef.current) jetpackRef.current.visible = currentSection === "grape";
 
     // Hero bottle continuous rotation
     if (heroGroupRef.current && currentSection === "hero") {
@@ -64,22 +56,16 @@ export default function Global3DScene({
       Even (2, 4): Start Left (-10), go Right to (-3.5)
     */
     if (parachutingRef.current) {
-      // Mango (Odd 1) -> Right to Left
-      // progress 0 = x: 10, progress 1 = x: 3.5
-      parachutingRef.current.position.x = 10 - (mangoProgress * 6.5);
+      parachutingRef.current.position.x = -8 + mangoProgress * 11.5;
     }
     if (surfingRef.current) {
-      // Strawberry (Even 2) -> Left to Right
-      // progress 0 = x: -10, progress 1 = x: -3.5
-      surfingRef.current.position.x = -10 + (strawProgress * 6.5);
+      surfingRef.current.position.x = 8 - strawProgress * 11.5;
     }
     if (chillingRef.current) {
-      // Watermelon (Odd 3) -> Right to Left
-      chillingRef.current.position.x = 10 - (melonProgress * 6.5);
+      chillingRef.current.position.x = -8 + melonProgress * 11.5;
     }
     if (jetpackRef.current) {
-      // Grape (Even 4) -> Left to Right
-      jetpackRef.current.position.x = -10 + (grapeProgress * 6.5);
+      jetpackRef.current.position.x = 8 - grapeProgress * 11.5;
     }
   });
 
@@ -87,7 +73,13 @@ export default function Global3DScene({
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={45} />
+      <PerspectiveCamera
+        makeDefault
+        fov={SCENE_CAMERA.fov}
+        near={SCENE_CAMERA.near}
+        far={SCENE_CAMERA.far}
+        position={[...SCENE_CAMERA.position]}
+      />
       <ambientLight intensity={1.5} />
       <directionalLight position={[5, 10, 5]} intensity={3} castShadow />
       <directionalLight position={[-5, -10, -5]} intensity={1.5} color="#ffffff" />

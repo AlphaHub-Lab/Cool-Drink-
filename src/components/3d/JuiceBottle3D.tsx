@@ -5,6 +5,17 @@ import { useFrame } from "@react-three/fiber";
 import { Float, Text } from "@react-three/drei";
 import * as THREE from "three";
 
+type ColorMaterial = { color: THREE.Color };
+
+function useColorLerp(color: string, ref: React.RefObject<ColorMaterial | null>) {
+  const targetColor = useMemo(() => new THREE.Color(color), [color]);
+  useFrame((_, delta) => {
+    if (ref.current && ref.current.color) {
+      ref.current.color.lerp(targetColor, delta * 6);
+    }
+  });
+}
+
 interface BottleProps {
   color: string;
   liquidColor: string;
@@ -17,11 +28,17 @@ interface BottleProps {
 }
 
 function BottleBody({ color }: { color: string }) {
+  const mat1Ref = useRef<THREE.MeshPhysicalMaterial>(null);
+  const mat2Ref = useRef<THREE.MeshPhysicalMaterial>(null);
+  useColorLerp(color, mat1Ref);
+  useColorLerp(color, mat2Ref);
+
   return (
     <group>
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.38, 0.42, 2.2, 32, 1, true]} />
         <meshPhysicalMaterial
+          ref={mat1Ref}
           color={color}
           transmission={0.4}
           opacity={0.8}
@@ -38,6 +55,7 @@ function BottleBody({ color }: { color: string }) {
       <mesh position={[0, -1.1, 0]} castShadow>
         <cylinderGeometry args={[0.42, 0.42, 0.05, 32]} />
         <meshPhysicalMaterial
+          ref={mat2Ref}
           color={color}
           transmission={0.5}
           roughness={0.1}
@@ -63,10 +81,14 @@ function Liquid({ color, level = 0.85 }: { color: string; level?: number }) {
   const currentHeight = Math.max(0.01, maxLiquidHeight * level);
   const yPos = -1.1 + currentHeight / 2;
 
+  const matRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  useColorLerp(color, matRef);
+
   return (
     <mesh ref={liquidRef} position={[0, yPos, 0]}>
       <cylinderGeometry args={[0.35, 0.39, currentHeight, 32]} />
       <meshPhysicalMaterial
+        ref={matRef}
         color={color}
         transmission={0.1}
         roughness={0.2}
@@ -109,18 +131,23 @@ function BottleNeck() {
 }
 
 function BottleCap({ color }: { color: string }) {
+  const capMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  const ribsMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  useColorLerp(color, capMatRef);
+  useColorLerp(color, ribsMatRef);
+
   return (
     <group position={[0, 1.95, 0]}>
       <mesh castShadow>
         <cylinderGeometry args={[0.22, 0.22, 0.25, 32]} />
-        <meshStandardMaterial color={color} metalness={0.5} roughness={0.3} />
+        <meshStandardMaterial ref={capMatRef} color={color} metalness={0.5} roughness={0.3} />
       </mesh>
       {Array.from({ length: 24 }).map((_, i) => {
         const angle = (i / 24) * Math.PI * 2;
         return (
           <mesh key={i} position={[Math.cos(angle) * 0.22, 0, Math.sin(angle) * 0.22]} rotation={[0, angle, 0]}>
             <boxGeometry args={[0.02, 0.2, 0.01]} />
-            <meshStandardMaterial color={color} metalness={0.6} roughness={0.2} />
+            <meshStandardMaterial ref={ribsMatRef} color={color} metalness={0.6} roughness={0.2} />
           </mesh>
         );
       })}
@@ -129,6 +156,9 @@ function BottleCap({ color }: { color: string }) {
 }
 
 function BottleLabel({ label, color }: { label: string; color: string }) {
+  const bannerMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  useColorLerp(color, bannerMatRef);
+
   return (
     <group position={[0, 0.1, 0.41]}>
       {/* Front Label Background */}
@@ -154,7 +184,7 @@ function BottleLabel({ label, color }: { label: string; color: string }) {
       {/* Flavor Banner */}
       <mesh position={[0, -0.05, 0.005]}>
         <planeGeometry args={[0.55, 0.15]} />
-        <meshStandardMaterial color={color} roughness={0.5} />
+        <meshStandardMaterial ref={bannerMatRef} color={color} roughness={0.5} />
       </mesh>
       <Text
         position={[0, -0.05, 0.01]}

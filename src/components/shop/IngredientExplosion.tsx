@@ -13,7 +13,7 @@ export default function IngredientExplosion({ product }: { product: Product }) {
           viewport={{ once: true }}
           className="text-4xl md:text-5xl font-display font-bold mb-16"
         >
-          What's Inside?
+          What&apos;s Inside?
         </motion.h2>
 
         <div className="relative h-[600px] flex items-center justify-center max-w-4xl mx-auto">
@@ -50,7 +50,7 @@ export default function IngredientExplosion({ product }: { product: Product }) {
                   whileHover={{ scale: 1.2, rotate: 15 }}
                   className="bg-white rounded-full p-6 shadow-xl relative"
                 >
-                  {ing.emoji}
+                  {ing.name}
                   {/* Tooltip */}
                   <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-foreground text-background text-sm font-bold py-1 px-3 rounded-full">
                     {ing.name}

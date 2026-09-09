@@ -3,7 +3,9 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
-import { products, getCategories } from "@/lib/data";
+import Image from "next/image";
+import { products, getCategories, type Product } from "@/lib/data";
+import { useCart } from "@/context/CartContext";
 
 export default function ShopPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -30,12 +32,12 @@ export default function ShopPage() {
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.8, y: 20 },
+    hidden: { opacity: 1, y: 12 },
     show: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } }
   };
 
   return (
-    <div className="bg-background min-h-screen pt-12 pb-32">
+    <div className="bg-background min-h-screen pt-24 pb-32">
       <div className="container mx-auto px-6">
         
         {/* Shop Header */}
@@ -45,7 +47,7 @@ export default function ShopPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-6xl md:text-8xl font-display font-bold text-foreground mb-6"
           >
-            The Jungle <span className="text-forest-500">Shop</span>
+            The Shop
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -53,7 +55,7 @@ export default function ShopPage() {
             transition={{ delay: 0.2 }}
             className="text-xl text-foreground/70 max-w-2xl mx-auto font-medium"
           >
-            Pick your poison. Just kidding, it's all incredibly healthy. No sugar, no weird stuff. Just squished fruit.
+            Pick your poison. Just kidding, it&apos;s all incredibly healthy. No sugar, no weird stuff. Just squished fruit.
           </motion.p>
         </div>
 
@@ -102,14 +104,15 @@ export default function ShopPage() {
   );
 }
 
-function ProductCard({ product }: { product: any }) {
+function ProductCard({ product }: { product: Product }) {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const { addToCart } = useCart();
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
-    // In a real app, this would trigger a global state context update and a "fly to cart" animation
-    alert(`Added ${product.name} to cart! (Fly-to-cart animation hook)`);
+    e.stopPropagation();
+    addToCart(product.id);
   };
 
   return (
@@ -140,18 +143,17 @@ function ProductCard({ product }: { product: any }) {
           </span>
         </div>
 
-        {/* Floating Product (Emoji placeholder) */}
         <div className="relative z-10 flex-grow flex items-center justify-center">
           <motion.div
-            animate={{ 
+            animate={{
               y: isHovered ? -15 : 0,
-              rotate: isHovered ? 10 : 0,
-              scale: isHovered ? 1.1 : 1
+              rotate: isHovered ? 8 : 0,
+              scale: isHovered ? 1.06 : 1,
             }}
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
-            className="text-[8rem] filter drop-shadow-xl"
+            className="relative w-40 h-56 filter drop-shadow-xl"
           >
-            {product.emoji}
+            <Image src={product.bottleSrc} alt={product.name} fill className="object-contain" />
           </motion.div>
         </div>
 

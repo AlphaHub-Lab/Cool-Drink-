@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { products } from "@/lib/data";
 
 export default function Footer() {
   return (
@@ -24,10 +24,15 @@ export default function Footer() {
             <div>
               <h4 className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-sans mb-6">Shop</h4>
               <ul className="space-y-3">
-                {["All Products","Mango Madness","Raspberry Rush","Orange Overload"].map(l => (
-                  <li key={l}>
-                    <Link href="/shop" className="text-white/40 text-sm font-sans hover:text-white transition-colors duration-300">
-                      {l}
+                <li>
+                  <Link href="/shop" className="text-white/40 text-sm font-sans hover:text-white transition-colors duration-300">
+                    All Products
+                  </Link>
+                </li>
+                {products.map((p) => (
+                  <li key={p.id}>
+                    <Link href={`/shop/${p.id}`} className="text-white/40 text-sm font-sans hover:text-white transition-colors duration-300">
+                      {p.name}
                     </Link>
                   </li>
                 ))}
@@ -38,6 +43,7 @@ export default function Footer() {
               <ul className="space-y-3">
                 {[
                   { label: "About", href: "/about" },
+                  { label: "Gallery", href: "/gallery" },
                   { label: "The Feed", href: "/feed" },
                   { label: "Contact", href: "/contact" },
                   { label: "Feedback", href: "/feedbacks" },
