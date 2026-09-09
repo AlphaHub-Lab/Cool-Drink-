@@ -1,24 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useSpring } from "framer-motion";
-import { ShoppingCart, Search, User, Menu } from "lucide-react";
-import Magnetic from "./ui/Magnetic";
+import { usePathname } from "next/navigation";
+import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
-  const { scrollYProgress } = useScroll();
   const { openCart } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  const pathname = usePathname();
 
+  // On homepage, the hero has its own tiny nav overlay — hide the global nav
+  if (pathname === "/") return (
+    <>
+      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} navLinks={[
+        { name: "Home", path: "/" },
+        { name: "Shop", path: "/shop" },
+        { name: "About", path: "/about" },
+        { name: "Feedbacks", path: "/feedbacks" },
+        { name: "Feed", path: "/feed" },
+        { name: "Contact", path: "/contact" },
+      ]} />
+      {/* Floating mobile menu button only on homepage */}
+      <button
+        onClick={() => setIsMobileMenuOpen(true)}
+        className="md:hidden fixed top-5 right-5 z-[60] w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+      >
+        <Menu size={18} />
+      </button>
+    </>
+  );
+
+  // On other pages, use a minimal dark nav
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Shop", path: "/shop" },
@@ -32,84 +47,39 @@ export default function Navbar() {
     <>
       <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} navLinks={navLinks} />
 
-      {/* Scroll Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-forest-500 origin-left z-[60]"
-        style={{ scaleX }}
-      />
-
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="sticky top-0 left-0 right-0 z-50 py-4 bg-background/90 backdrop-blur-md border-b border-foreground/5 text-foreground"
-      >
-        <div className="container mx-auto px-6 flex items-center justify-between">
+      <header className="sticky top-0 left-0 right-0 z-50 py-5 px-6 md:px-12 bg-[#0A0E27]/95 backdrop-blur-md text-white">
+        <div className="flex items-center justify-between max-w-[1800px] mx-auto">
+          <Link href="/" className="text-xs tracking-[0.3em] uppercase font-sans font-light text-white/80 hover:text-white transition-colors">
+            No Filter
+          </Link>
           
-          {/* Brand */}
-          <Magnetic>
-            <Link href="/" className="flex items-center gap-2 group">
-              <motion.div
-                whileHover={{ rotate: 10, scale: 1.1 }}
-                className="w-10 h-10 bg-mango-500 rounded-full flex items-center justify-center text-white text-xl overflow-hidden shadow-sm"
-              >
-                🦥
-              </motion.div>
-              <span className="font-display font-bold text-2xl tracking-tighter">No Filter</span>
-            </Link>
-          </Magnetic>
-
-          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <Magnetic key={link.name}>
-                <Link
-                  href={link.path}
-                  className="font-medium relative group px-2 py-1"
-                >
-                  {link.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-foreground transition-all group-hover:w-full"></span>
-                </Link>
-              </Magnetic>
+              <Link
+                key={link.name}
+                href={link.path}
+                className={`text-[11px] tracking-[0.2em] uppercase font-sans transition-colors duration-300 ${
+                  pathname === link.path ? "text-mango-500" : "text-white/50 hover:text-white"
+                }`}
+              >
+                {link.name}
+              </Link>
             ))}
           </nav>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2 md:gap-4">
-            <div className="hidden md:flex items-center gap-4">
-              <Magnetic>
-                <button className="p-2 hover:bg-foreground/5 rounded-full transition-colors flex items-center justify-center">
-                  <Search size={20} />
-                </button>
-              </Magnetic>
-
-              <Magnetic>
-                <Link href="/profile" className="p-2 hover:bg-foreground/5 rounded-full transition-colors flex items-center justify-center">
-                  <User size={20} />
-                </Link>
-              </Magnetic>
-            </div>
-            
-            <Magnetic>
-              <button onClick={openCart} className="relative p-2 hover:bg-foreground/5 rounded-full transition-colors flex items-center justify-center">
-                <ShoppingCart size={20} />
-                <span className="absolute top-0 right-0 w-4 h-4 bg-mango-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
-                  2
-                </span>
-              </button>
-            </Magnetic>
-
-            {/* Mobile Menu Toggle */}
-            <button 
-              onClick={() => setIsMobileMenuOpen(true)} 
-              className="md:hidden p-2 hover:bg-foreground/5 rounded-full transition-colors flex items-center justify-center"
+          <div className="flex items-center gap-4">
+            <button onClick={openCart} className="text-white/60 hover:text-white transition-colors">
+              <ShoppingCart size={16} />
+            </button>
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden text-white/60 hover:text-white transition-colors"
             >
-              <Menu size={24} />
+              <Menu size={18} />
             </button>
           </div>
-
         </div>
-      </motion.header>
+      </header>
     </>
   );
 }

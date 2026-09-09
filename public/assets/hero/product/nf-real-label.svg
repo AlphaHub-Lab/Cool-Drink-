@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <style>
+      .text-no { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 80px; font-weight: 900; fill: #ffffff; text-transform: uppercase; letter-spacing: -2px; }
+      .text-filter { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 80px; font-weight: 900; fill: #ffffff; text-transform: uppercase; letter-spacing: -2px; }
+      .text-sub { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 300; fill: #ffffff; letter-spacing: 8px; text-transform: uppercase; }
+    </style>
+  </defs>
+  <text x="200" y="160" class="text-no" text-anchor="middle">NO</text>
+  <text x="200" y="235" class="text-filter" text-anchor="middle">FILTER</text>
+  <text x="200" y="275" class="text-sub" text-anchor="middle">RAW MANGO</text>
+</svg>

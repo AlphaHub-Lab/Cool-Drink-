@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Outfit, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -12,15 +12,20 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
+const bebasNeue = Bebas_Neue({
+  variable: "--font-condensed",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "NO FILTER | Raw Juice",
   description: "The Raw Truth.",
 };
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
-import SmoothScrolling from "@/components/ui/SmoothScrolling";
+import AnimationEngine from "@/components/ui/AnimationEngine";
 
 import LoadingScreen from "@/components/LoadingScreen";
 import { CartProvider } from "@/context/CartContext";
@@ -33,15 +38,14 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${outfit.variable} ${inter.variable} h-full antialiased`}
+      className={`${outfit.variable} ${inter.variable} ${bebasNeue.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans selection:bg-mango-500 selection:text-white bg-foreground">
-        <SmoothScrolling />
+        <AnimationEngine />
         <CartProvider>
           <LoadingScreen />
           <CartDrawer />
-          <Navbar />
-          <main className="flex-grow flex flex-col relative z-10 bg-background">
+          <main className="flex-grow flex flex-col relative z-10">
             <PageTransition>
               {children}
             </PageTransition>

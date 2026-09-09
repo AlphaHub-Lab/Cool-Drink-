@@ -30,6 +30,12 @@ export default function MoodSelector() {
   const [activeMood, setActiveMood] = useState(moods[0]);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Mouse Parallax effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -47,7 +53,7 @@ export default function MoodSelector() {
       
       {/* Ambient Floating Liquid Blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30 mix-blend-overlay">
-        {[...Array(5)].map((_, i) => (
+        {mounted && [...Array(5)].map((_, i) => (
           <motion.div
             key={`blob-${i}`}
             className="absolute rounded-full bg-white blur-3xl"

@@ -3,12 +3,18 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #FDF8F2; /* Cream/Sand Background */
-  --foreground: #2B2D42; /* Charcoal text */
+  --background: #FDF8F2;
+  --foreground: #2B2D42;
   
   --mango-500: #FF9F1C;
+  --mango-400: #FFB84D;
   --raspberry-500: #E71D36;
   --forest-500: #2EC4B6;
+  --navy: #0A0E27;
+  --cream: #F5EDE0;
+  --purple-brand: #6B2FA0;
+  --green-brand: #1DB954;
+  --orange-brand: #FF6B2B;
 }
 
 @theme inline {
@@ -16,27 +22,60 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-condensed: var(--font-condensed), 'Impact', 'Arial Black', sans-serif;
 
   --color-mango-500: var(--mango-500);
+  --color-mango-400: var(--mango-400);
   --color-raspberry-500: var(--raspberry-500);
   --color-forest-500: var(--forest-500);
+  --color-navy: var(--navy);
+  --color-cream: var(--cream);
+  --color-purple-brand: var(--purple-brand);
+  --color-green-brand: var(--green-brand);
+  --color-orange-brand: var(--orange-brand);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
 }
 
 body {
-  background-color: var(--background);
+  background-color: var(--navy);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
+/* Override scrollbar for premium feel */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--navy);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,159,28,0.4);
+  border-radius: 2px;
+}
 
-
-/* Base custom utilities or animations that Framer Motion might rely on */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

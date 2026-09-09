@@ -1,106 +1,217 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 import Magnetic from "../ui/Magnetic";
 
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export default function HeroSection() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
+  const containerRef = useRef<HTMLElement>(null);
+  const pinWrapperRef = useRef<HTMLDivElement>(null);
+  
+  // Phase 1 Refs: Intro Sequence
+  const introBgRef = useRef<HTMLDivElement>(null);
+  const dropRef = useRef<HTMLDivElement>(null);
+  const splashRef = useRef<HTMLDivElement>(null);
+  const whiteFlashRef = useRef<HTMLDivElement>(null);
 
-  const scaleTitle = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const yBg = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  // Phase 2 Refs: Product Layers
+  const studioBgRef = useRef<HTMLDivElement>(null);
+  const smokeRef = useRef<HTMLDivElement>(null);
+  const bottleShadowRef = useRef<HTMLDivElement>(null);
+  const bottleCleanRef = useRef<HTMLDivElement>(null);
+  const labelDecalRef = useRef<HTMLDivElement>(null);
+  const highlightsRef = useRef<HTMLDivElement>(null);
+  const uiRef = useRef<HTMLDivElement>(null);
 
-  const titleText = "Juice that hits different.".split(" ");
+  useGSAP(() => {
+    if (!containerRef.current) return;
+    let mm = gsap.matchMedia();
+
+    // -------------------------------------------------------------
+    // DESKTOP: Cinematic Splash & Pinned Experience
+    // -------------------------------------------------------------
+    mm.add("(min-width: 768px)", () => {
+      
+      // -- INITIAL STATES --
+      // Intro Phase
+      gsap.set(introBgRef.current, { opacity: 1 });
+      gsap.set(dropRef.current, { y: "-100vh", scale: 0.8, opacity: 1 });
+      gsap.set(splashRef.current, { scale: 0, opacity: 0, y: "10vh" });
+      gsap.set(whiteFlashRef.current, { opacity: 0 });
+
+      // Product Phase (Hidden initially)
+      gsap.set(studioBgRef.current, { opacity: 0, scale: 1.1 });
+      gsap.set(smokeRef.current, { opacity: 0 });
+      gsap.set(bottleShadowRef.current, { opacity: 0, scale: 0.8, y: "15vh" });
+      gsap.set(bottleCleanRef.current, { opacity: 0, scale: 0.8, y: "15vh" });
+      gsap.set(labelDecalRef.current, { opacity: 0, scale: 0.8, y: "15vh", zIndex: 50 });
+      gsap.set(highlightsRef.current, { opacity: 0, scale: 0.8, y: "15vh" });
+      gsap.set(uiRef.current, { opacity: 0, y: 50 });
+
+      // -- PHASE 1: ENTRANCE ANIMATION --
+      const entryTl = gsap.timeline();
+
+      entryTl
+        // 1. Drop falls
+        .to(dropRef.current, { y: "0vh", duration: 0.8, ease: "power2.in" })
+        .to(dropRef.current, { scaleY: 1.5, scaleX: 0.5, duration: 0.2, ease: "none" }, "-=0.2")
+        // 2. Impact & Splash
+        .to(dropRef.current, { opacity: 0, duration: 0.1 }, "+=0")
+        .to(splashRef.current, { opacity: 1, scale: 1.5, duration: 0.6, ease: "expo.out" }, "-=0.1")
+        .to(whiteFlashRef.current, { opacity: 0.5, duration: 0.1 }, "-=0.6")
+        .to(whiteFlashRef.current, { opacity: 0, duration: 0.5 }, "-=0.5")
+        // 3. Transition backgrounds & Reveal Product
+        .to(introBgRef.current, { opacity: 0, duration: 1 }, "-=0.4")
+        .to(studioBgRef.current, { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }, "-=1")
+        .to(splashRef.current, { scale: 2.5, opacity: 0, filter: "blur(20px)", duration: 1.5, ease: "power2.out" }, "-=1.2")
+        // Product layers rise up from the splash
+        .to([bottleShadowRef.current, bottleCleanRef.current, labelDecalRef.current, highlightsRef.current], {
+          opacity: 1,
+          scale: 1,
+          y: "0vh",
+          duration: 1.5,
+          ease: "back.out(1.2)",
+          stagger: 0.05
+        }, "-=1")
+        .to(smokeRef.current, { opacity: 0.4, duration: 2 }, "-=1")
+        .to(uiRef.current, { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, "-=0.5");
+
+      // -- PHASE 2: SCROLL PARALLAX --
+      const scrollTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: pinWrapperRef.current,
+          start: "top top",
+          end: "+=200%", 
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1
+        }
+      });
+
+      // Independently move layers to prove compositing
+      scrollTl.to(studioBgRef.current, { scale: 1.05, ease: "none" }, 0);
+      scrollTl.to(smokeRef.current, { y: "-10vh", rotation: 5, ease: "none" }, 0);
+      scrollTl.to([bottleCleanRef.current, highlightsRef.current], { scale: 1.15, y: "-5vh", ease: "power1.inOut" }, 0);
+      scrollTl.to(bottleShadowRef.current, { scale: 1.2, y: "-2vh", opacity: 0.3, ease: "power1.inOut" }, 0);
+      
+      // Label translates differently to simulate 3D cylinder tracking
+      scrollTl.to(labelDecalRef.current, { scale: 1.18, y: "-6vh", ease: "power1.inOut" }, 0);
+      
+      // Fade out UI
+      scrollTl.to(uiRef.current, { opacity: 0, y: -50, ease: "power2.in" }, 0);
+
+      // Transition to next section
+      scrollTl.to([bottleCleanRef.current, highlightsRef.current, labelDecalRef.current, bottleShadowRef.current], {
+        scale: 1.2, y: "5vh", opacity: 0, ease: "power2.in"
+      }, 0.5);
+      scrollTl.to(studioBgRef.current, { opacity: 0, ease: "power2.in" }, 0.6);
+
+      return () => {};
+    });
+
+  }, { scope: containerRef });
 
   return (
-    <section ref={ref} className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-foreground">
-      
-      {/* Background Video */}
-      <motion.div 
-        className="absolute inset-0 z-0 w-full h-full"
-        style={{ y: yBg }}
+    <section ref={containerRef} className="relative bg-black w-full">
+      <div 
+        ref={pinWrapperRef} 
+        className="relative h-[100svh] w-full flex items-center justify-center bg-black perspective-[1000px]"
       >
-        <div className="absolute inset-0 bg-black/40 z-10" /> {/* Dark overlay for text readability */}
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0 opacity-80"
-        >
-          {/* Using the user's provided local video */}
-          <source src="/create_some_animated_images.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </motion.div>
-
-      {/* Content */}
-      <motion.div 
-        className="container mx-auto px-6 relative z-20 text-center flex flex-col items-center pointer-events-none"
-        style={{ opacity }}
-      >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          className="mb-8 inline-block bg-white/20 backdrop-blur-md px-6 py-2 rounded-full font-bold text-white shadow-sm uppercase tracking-[0.2em] text-xs border border-white/20"
-        >
-          100% Natural • No Added Sugar
-        </motion.div>
         
-        {/* Staggered Text Masking */}
-        <motion.h1 
-          style={{ scale: scaleTitle }}
-          className="text-6xl md:text-8xl lg:text-[10rem] font-display font-bold tracking-tighter text-white mb-8 leading-[0.9] max-w-6xl flex flex-wrap justify-center gap-x-6 gap-y-2 drop-shadow-2xl"
-        >
-          {titleText.map((word, i) => (
-            <div key={i} className="overflow-hidden">
-              <motion.span
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className={`inline-block ${word.includes('different') ? 'text-mango-500' : ''}`}
-              >
-                {word}
-              </motion.span>
-            </div>
-          ))}
-        </motion.h1>
+        {/* =========================================
+            PHASE 1: CINEMATIC INTRO VFX
+        ========================================= */}
+        <div ref={introBgRef} className="absolute inset-0 z-0">
+          <Image src="/assets/hero/intro/orange-vfx-background.jpg" alt="Orange Cinematic VFX" fill className="object-cover" priority />
+        </div>
         
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="text-xl md:text-2xl text-white/90 max-w-2xl mb-12 font-medium drop-shadow-md"
-        >
-          Dropped fresh from the canopy. Refreshingly honest, wildy organic fruit juice.
-        </motion.p>
+        <div ref={dropRef} className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+          <div className="relative w-32 h-32 md:w-48 md:h-48">
+            <Image src="/assets/hero/intro/juice-drop.png" alt="Juice Drop" fill className="object-contain drop-shadow-2xl" priority />
+          </div>
+        </div>
 
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, damping: 15, delay: 1 }}
-          className="pointer-events-auto"
-        >
+        <div ref={splashRef} className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none origin-bottom">
+          <div className="relative w-[150vw] h-[150vh] md:w-[80vw] md:h-[80vh] top-[20vh]">
+            <Image src="/assets/hero/intro/juice-splash.png" alt="Juice Splash VFX" fill className="object-contain mix-blend-screen opacity-90" priority />
+          </div>
+        </div>
+
+        <div ref={whiteFlashRef} className="absolute inset-0 z-[100] bg-white pointer-events-none mix-blend-overlay" />
+
+        {/* =========================================
+            PHASE 2: LAYERED PRODUCT PRESENTATION
+        ========================================= */}
+        
+        {/* LAYER 0: Studio Background */}
+        <div ref={studioBgRef} className="absolute inset-0 z-[5]">
+          <Image src="/assets/hero/environment/atmosphere-smoke.jpg" alt="Studio Background" fill className="object-cover opacity-60" priority />
+        </div>
+
+        {/* LAYER 1: Atmosphere / Smoke */}
+        <div ref={smokeRef} className="absolute inset-0 z-10 pointer-events-none mix-blend-screen opacity-40">
+          <Image src="/assets/hero/environment/atmosphere-smoke.jpg" alt="Smoke Atmosphere" fill className="object-cover" />
+        </div>
+
+        {/* LAYER 3: Bottle Shadow */}
+        <div ref={bottleShadowRef} className="absolute inset-0 z-30 pointer-events-none flex items-center justify-center pt-20">
+          <div className="relative w-[50vh] h-[80vh] md:w-[35vw] md:h-[90vh] max-w-[600px] max-h-[900px]">
+            {/* CSS-generated drop shadow for clean alpha mapping */}
+            <div className="absolute inset-0 bg-black blur-3xl opacity-50 transform translate-y-[5vh] scale-[0.8]" style={{ borderRadius: '100px 100px 30px 30px' }} />
+          </div>
+        </div>
+
+        {/* LAYER 4: Canonical Clean Bottle */}
+        <div ref={bottleCleanRef} className="absolute inset-0 z-40 pointer-events-none flex items-center justify-center pt-10">
+          <div className="relative w-[50vh] h-[80vh] md:w-[35vw] md:h-[90vh] max-w-[600px] max-h-[900px]">
+            <Image src="/assets/hero/product/nf-hero-bottle-main.png" alt="No Filter Canonical Bottle" fill className="object-contain" priority />
+          </div>
+        </div>
+
+        {/* LAYER 5: Real Label Decal (Independent SVG) */}
+        <div ref={labelDecalRef} className="absolute inset-0 z-50 pointer-events-none flex items-center justify-center pt-10">
+          <div className="relative w-[50vh] h-[80vh] md:w-[35vw] md:h-[90vh] max-w-[600px] max-h-[900px] flex items-center justify-center">
+             <div className="relative w-[60%] h-[40%] transform -translate-y-[5%]">
+                <Image src="/assets/hero/product/nf-real-label.svg" alt="No Filter Label" fill className="object-contain drop-shadow-lg" priority />
+             </div>
+          </div>
+        </div>
+
+        {/* LAYER 6: Specular Highlights / Condensation */}
+        <div ref={highlightsRef} className="absolute inset-0 z-60 pointer-events-none flex items-center justify-center pt-10">
+          <div className="relative w-[50vh] h-[80vh] md:w-[35vw] md:h-[90vh] max-w-[600px] max-h-[900px]">
+            <Image 
+              src="/assets/hero/textures/nf-condensation-overlay.jpg" 
+              alt="Bottle Highlights" 
+              fill
+              className="object-contain mix-blend-screen opacity-40"
+              style={{ maskImage: "url(/assets/hero/product/nf-hero-bottle-main.png)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center", WebkitMaskImage: "url(/assets/hero/product/nf-hero-bottle-main.png)", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat", WebkitMaskPosition: "center" }}
+            />
+          </div>
+        </div>
+
+        {/* LAYER 7: UI / CTA */}
+        <div ref={uiRef} className="absolute bottom-12 z-[100] w-full flex justify-center px-6 pointer-events-auto">
           <Magnetic pullRange={30}>
             <Link href="/shop">
               <button
-                className="bg-mango-500 text-foreground px-12 py-6 rounded-full font-display font-bold text-xl flex items-center gap-4 shadow-xl hover:shadow-2xl transition-all relative overflow-hidden group"
+                className="bg-transparent border border-white/20 text-white/90 px-12 py-4 rounded-full font-display font-medium text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-white/10 hover:border-white/50 transition-all duration-500 backdrop-blur-md"
               >
-                <div className="absolute inset-0 bg-white/30 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out rounded-full" />
-                <span className="relative z-10">Shop Flavors</span> 
-                <span className="relative z-10 text-2xl group-hover:rotate-12 transition-transform">🍹</span>
+                Experience Real Juice
               </button>
             </Link>
           </Magnetic>
-        </motion.div>
-      </motion.div>
+        </div>
+
+      </div>
     </section>
   );
 }
