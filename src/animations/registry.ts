@@ -7,9 +7,15 @@ let pluginsReady = false;
 let lenis: Lenis | null = null;
 let tickerFn: ((time: number) => void) | null = null;
 
+let windowScrollHandler: (() => void) | null = null;
+
 export function registerGsapOnce() {
   if (pluginsReady || typeof window === "undefined") return;
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({
+    ignoreMobileResize: true,
+    autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize",
+  });
   pluginsReady = true;
 }
 
@@ -33,10 +39,19 @@ export function initSharedScroll(): () => void {
     gestureOrientation: "vertical",
     smoothWheel: true,
     wheelMultiplier: 1,
-    touchMultiplier: 2,
+    touchMultiplier: 1.5,
   });
 
-  lenis.on("scroll", ScrollTrigger.update);
+  const onScroll = () => {
+    ScrollTrigger.update();
+  };
+
+  lenis.on("scroll", onScroll);
+
+  windowScrollHandler = () => {
+    ScrollTrigger.update();
+  };
+  window.addEventListener("scroll", windowScrollHandler, { passive: true });
 
   tickerFn = (time: number) => {
     lenis?.raf(time * 1000);
@@ -48,6 +63,10 @@ export function initSharedScroll(): () => void {
 }
 
 export function destroySharedScroll() {
+  if (windowScrollHandler) {
+    window.removeEventListener("scroll", windowScrollHandler);
+    windowScrollHandler = null;
+  }
   if (tickerFn) {
     gsap.ticker.remove(tickerFn);
     tickerFn = null;
@@ -63,3 +82,4 @@ export function killEngineTriggers() {
     if (t.vars.id?.toString().startsWith(ENGINE_TRIGGER)) t.kill();
   });
 }
+

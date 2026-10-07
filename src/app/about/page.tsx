@@ -66,7 +66,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, type: "spring", stiffness: 100 }}
-            className="text-6xl md:text-[10rem] lg:text-[14rem] font-display font-bold text-background tracking-tighter leading-[0.8]"
+            className="text-5xl sm:text-7xl md:text-[9rem] lg:text-[13rem] font-display font-bold text-background tracking-tighter leading-[0.85]"
           >
             THE RAW<br/>TRUTH.
           </motion.h1>
@@ -78,11 +78,11 @@ export default function AboutPage() {
 
       {/* 3. The Process (Sticky Narrative) */}
       <section ref={processRef} className="relative bg-background text-foreground transition-colors duration-1000">
-        <div className="h-[300vh] w-full relative">
-          <div className="container mx-auto px-6 flex flex-col md:flex-row h-full">
+        <div className="h-[260vh] md:h-[300vh] w-full relative">
+          <div className="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row h-full">
             
             {/* Sticky Visuals */}
-            <div className="w-full md:w-1/2 h-[50vh] md:h-screen sticky top-0 flex items-center justify-center p-6 md:p-12 z-10 perspective-[1000px]">
+            <div className="w-full md:w-1/2 h-[34vh] sm:h-[42vh] md:h-screen sticky top-16 md:top-0 flex items-center justify-center p-4 sm:p-6 md:p-12 z-10 perspective-[1000px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={processes[activeProcess].chapter}
@@ -90,13 +90,13 @@ export default function AboutPage() {
                   animate={{ opacity: 1, rotateY: 0, scale: 1 }}
                   exit={{ opacity: 0, rotateY: -90, scale: 1.2 }}
                   transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                  className={`w-full max-w-md aspect-square rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden ${processes[activeProcess].color}`}
+                  className={`w-44 h-44 sm:w-60 sm:h-60 md:w-96 md:h-96 max-w-md aspect-square rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden ${processes[activeProcess].color}`}
                 >
                   <div className="absolute inset-0 bg-white/20 backdrop-blur-sm" />
                   <motion.span 
-                    animate={{ y: [-20, 20, -20], rotate: [-10, 10, -10] }}
+                    animate={{ y: [-15, 15, -15], rotate: [-10, 10, -10] }}
                     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="text-[10rem] relative z-10 drop-shadow-2xl"
+                    className="text-6xl sm:text-8xl md:text-[10rem] relative z-10 drop-shadow-2xl select-none"
                   >
                     {processes[activeProcess].emoji}
                   </motion.span>
@@ -105,25 +105,25 @@ export default function AboutPage() {
             </div>
 
             {/* Scrolling Text */}
-            <div className="w-full md:w-1/2 h-full flex flex-col justify-between py-[10vh] px-4 md:px-12 z-20">
+            <div className="w-full md:w-1/2 h-full flex flex-col justify-between py-[5vh] md:py-[10vh] px-4 md:px-12 z-20">
               {processes.map((process, i) => (
-                <div key={i} className="h-screen flex flex-col justify-center">
+                <div key={i} className="min-h-[50vh] md:h-screen flex flex-col justify-center py-8 md:py-0">
                   <motion.div
-                    initial={{ opacity: 0, x: 100 }}
+                    initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.5 }}
+                    viewport={{ once: false, amount: 0.3 }}
                     transition={{ type: "spring", stiffness: 100, damping: 20 }}
                   >
-                    <span className={`text-2xl font-display font-bold mb-6 block opacity-50`}>
+                    <span className="text-lg sm:text-2xl font-display font-bold mb-3 sm:mb-6 block opacity-50">
                       CHAPTER {process.chapter}
                     </span>
-                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-4 leading-tight tracking-tighter">
+                    <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-2 sm:mb-4 leading-tight tracking-tighter">
                       {process.title}
                     </h2>
-                    <h3 className="text-3xl md:text-5xl text-foreground/40 font-display font-bold mb-8 leading-tight tracking-tighter">
+                    <h3 className="text-xl sm:text-3xl md:text-5xl text-foreground/40 font-display font-bold mb-4 sm:mb-8 leading-tight tracking-tighter">
                       {process.subtitle}
                     </h3>
-                    <p className="text-xl md:text-2xl text-foreground/80 max-w-md leading-relaxed font-medium">
+                    <p className="text-base sm:text-xl md:text-2xl text-foreground/80 max-w-md leading-relaxed font-medium">
                       {process.desc}
                     </p>
                   </motion.div>
@@ -136,18 +136,18 @@ export default function AboutPage() {
       </section>
 
       {/* 4. THE BLACKLIST */}
-      <section className="py-40 bg-foreground text-background relative z-20 overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="mb-24">
-            <h2 className="text-xl md:text-2xl text-mango-500 font-bold tracking-widest uppercase mb-4">
+      <section className="py-24 sm:py-32 md:py-40 bg-foreground text-background relative z-20 overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="mb-12 sm:mb-20 md:mb-24">
+            <h2 className="text-base sm:text-xl md:text-2xl text-mango-500 font-bold tracking-widest uppercase mb-3 sm:mb-4">
               The Blacklist
             </h2>
-            <h3 className="text-5xl md:text-8xl font-display font-bold tracking-tighter">
+            <h3 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold tracking-tighter">
               WHAT WE REFUSE<br/>TO USE.
             </h3>
           </div>
           
-          <div className="flex flex-col gap-12 md:gap-20 max-w-5xl mx-auto mt-20">
+          <div className="flex flex-col gap-8 sm:gap-14 md:gap-20 max-w-5xl mx-auto mt-12 sm:mt-20">
             {[
               "REFINED SUGAR",
               "ARTIFICIAL COLORS",
@@ -155,19 +155,19 @@ export default function AboutPage() {
               "HEAT PASTEURIZATION",
               "DILUTED WATER"
             ].map((item, i) => (
-              <div key={i} className="relative inline-block w-fit group">
+              <div key={i} className="relative inline-block w-fit max-w-full group">
                 <motion.span 
-                  className="text-5xl md:text-7xl lg:text-9xl font-display font-bold tracking-tighter text-background/20 group-hover:text-background/40 transition-colors"
+                  className="text-3xl sm:text-5xl md:text-7xl lg:text-9xl font-display font-bold tracking-tighter text-background/20 group-hover:text-background/40 transition-colors break-words block"
                 >
                   {item}
                 </motion.span>
                 {/* The Strike-Through Line */}
                 <motion.div 
                   initial={{ width: "0%" }}
-                  whileInView={{ width: "110%" }}
+                  whileInView={{ width: "105%" }}
                   viewport={{ once: false, margin: "0px" }}
                   transition={{ duration: 0.8, delay: 0.1, ease: "circOut" }}
-                  className="absolute top-1/2 left-[-5%] h-2 md:h-4 bg-red-500 -translate-y-1/2 rotate-[-2deg]"
+                  className="absolute top-1/2 left-[-2%] h-1.5 sm:h-2 md:h-4 bg-red-500 -translate-y-1/2 rotate-[-2deg]"
                 />
               </div>
             ))}

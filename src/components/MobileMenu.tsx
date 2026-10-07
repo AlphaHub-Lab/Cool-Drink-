@@ -50,13 +50,13 @@ export default function MobileMenu({ isOpen, onClose, navLinks }: MobileMenuProp
           </div>
 
           {/* Links */}
-          <div className="flex-grow flex flex-col justify-center px-6 gap-4">
+          <div className="flex-grow flex flex-col justify-center px-6 py-6 gap-2.5 sm:gap-4 overflow-y-auto">
             {navLinks.map((link, i) => (
               <motion.div custom={i} variants={linkVariants} key={link.name} className="overflow-hidden">
                 <Link 
                   href={link.path} 
                   onClick={onClose}
-                  className="font-condensed text-6xl sm:text-7xl text-white/80 hover:text-mango-500 transition-colors duration-300 inline-block"
+                  className="font-condensed text-4xl sm:text-5xl md:text-6xl text-white/85 hover:text-mango-500 active:text-mango-400 transition-colors duration-300 inline-block"
                 >
                   {link.name.toUpperCase()}
                 </Link>

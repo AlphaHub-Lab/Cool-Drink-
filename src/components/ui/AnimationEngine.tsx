@@ -94,13 +94,26 @@ export default function AnimationEngine() {
       });
     }, 100);
 
+    const onResize = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+
     return () => {
       window.clearTimeout(timer);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
       killEngineTriggers();
     };
   }, [pathname]);
 
   useEffect(() => {
+    // Only enable magnetic mouse effects on devices with fine pointer (mouse/trackpad), not touch screens
+    if (typeof window === "undefined" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      return;
+    }
+
     const magnetics = document.querySelectorAll("[data-nf-magnetic]");
     const cleanups: (() => void)[] = [];
 
@@ -130,6 +143,7 @@ export default function AnimationEngine() {
 
     return () => cleanups.forEach((c) => c());
   }, [pathname]);
+
 
   return null;
 }
